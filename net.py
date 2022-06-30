@@ -19,7 +19,7 @@ class Net:
         #try:
            # Net.net_path, ok = QtWidgets.QFileDialog.getOpenFileName(directory='D:/GitHub/',filter='*.onnx')
             #temp_net = Net.net
-        Net.net_path = 'D:\\GitHub\\VisionSystemModule_Yolov5\\best.onnx'
+        Net.net_path = 'data\\models\\best.onnx'
         Net.net = Utils.build_model(Net.net_path)
         Net.__set_net_name_on_window(weights_label)
         #except Exception:

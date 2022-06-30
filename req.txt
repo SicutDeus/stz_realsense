@@ -1,0 +1,13 @@
+# YOLOv5 requirements
+# Usage: pip install -r req.txt
+
+# Base ----------------------------------------
+PyQt5==5.15.7
+PyQt5-Qt5==5.15.2
+PyQt5-sip==12.11.0
+numpy==1.23.0
+opencv-python==4.5.5.64
+pip==21.3.1
+pyrealsense==2.50.0.3812
+setuptools==60.2.0
+wheel==0.37.1

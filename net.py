@@ -15,17 +15,9 @@ class Net:
         :param weights_label: лейбл для названия весов
         :return:
         """
-
-        #try:
-           # Net.net_path, ok = QtWidgets.QFileDialog.getOpenFileName(directory='D:/GitHub/',filter='*.onnx')
-            #temp_net = Net.net
-        Net.net_path = 'data\\models\\best.onnx'
+        Net.net_path = 'data\\models\\penis.onnx'
         Net.net = Utils.build_model(Net.net_path)
         Net.__set_net_name_on_window(weights_label)
-        #except Exception:
-            #Net.net = temp_net
-            #msg.setText('Bad weights')
-           # msg.exec_()
 
     @staticmethod
     def __set_net_name_on_window(weights_label):
@@ -35,4 +27,4 @@ class Net:
         :param weights_label: лейбл для названия весов
         :return:
         """
-        weights_label.setText(Net.net_path.split('/')[-1])
+        weights_label.setText(Net.net_path.split('\\')[-1])

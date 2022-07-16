@@ -25,7 +25,6 @@ class Detection(QThread):
     def set_params(self, net, camera_index):
         """
         Обновление параметров детекции.
-
         :param net: текущая нейронная сеть
         :param camera_index: индекс камеры, с которой программа будет получать изображение
         :return:
@@ -53,7 +52,6 @@ class Detection(QThread):
                     self.frame_update.emit(qt_img)
             else:
                 self.connection_lost.emit('Lost connection, trying to update . . .')
-                capture = cv2.VideoCapture(self.camera_index)
                 time.sleep(1)
 
         self.connection_lost.emit('Choose weights, camera and press Start button')
@@ -62,7 +60,6 @@ class Detection(QThread):
     def stop(self):
         """
         Остановка детекции.
-
         :return:
         """
         self.thread_active = False

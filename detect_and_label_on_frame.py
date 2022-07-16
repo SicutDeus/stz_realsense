@@ -11,38 +11,41 @@ class FrameDetection:
     def detect_and_label(image, net, depth_frame):
         """
         Полная обработка входного изображения.
-
         :param image: входное изображение
         :param net: модель нейронной сети
         :return: размеченное изображение
         """
-        image = cv2.resize(image, (640, 640))
         yolo5_img = Utils.convert_frame_to_yolov5_format(image)
         output_data = FrameDetection.__detect_on_frame(yolo5_img, net)
         output_img = FrameDetection.__label_on_frame(yolo5_img, output_data,depth_frame)
-        return output_img
+        result = output_img[0:480, 0:640]
+        cv2.imwrite('2.jpg',depth_frame)
+        cv2.imwrite('1.jpg',image)
+        return result
 
     @staticmethod
     def __detect_on_frame(image, net):
         """
         Получает сырые данные детекции.
-
         :param image: входное изображения
         :param net: модель нейронной сети
         :return: сырые данные детекции
         """
-
+        H,W = image.shape[:2]
         blob = cv2.dnn.blobFromImage(image, 1 / 255.0,
-                                     (Config.INPUT_WIDTH, Config.INPUT_HEIGHT), swapRB=True, crop=False)
+                                     (W, H), swapRB=True, crop=False)
+        print(blob.shape)
         net.setInput(blob)
-        predictions = net.forward()
+        try:
+            predictions = net.forward()
+        except Exception as e:
+            print(e.args)
         return predictions
 
     @staticmethod
     def __wrap_detection(input_image, output_data):
         """
         Обёртывает данные после детекции.
-
         :param input_image: входное изображение
         :param output_data: данные, полученные после детекции о нахождении объекта на кадре
         :return: id класса, уверенность в определении объекта, локация объекта
@@ -52,8 +55,9 @@ class FrameDetection:
         boxes = []
         rows = output_data.shape[0]
         image_width, image_height, _ = input_image.shape
-        x_factor = image_width / Config.INPUT_WIDTH
-        y_factor = image_height / Config.INPUT_HEIGHT
+        H, W = input_image.shape[:2]
+        x_factor = image_width / W
+        y_factor = image_height / H
         for r in range(rows):
             row = output_data[r]
             confidence = row[4]
@@ -86,23 +90,23 @@ class FrameDetection:
     def __label_on_frame(frame, outs, depth_frame):
         """
         Отмечает на входном изображении расположение объекта.
-
         :param frame: входное изображение
         :param outs: данные, полученные после детекции о нахождении объекта на кадре
         :return: размеченное изображение в cv2 формате
         """
+        color = (255,0,0)
+        depth_frame = cv2.resize(depth_frame,(640,640))
         class_ids, confidences, boxes = FrameDetection.__wrap_detection(frame, outs[0])
         for (classid, confidence, box) in zip(class_ids, confidences, boxes):
-            if confidence >= .5 and int(box[0] + box[2]/2) < 480 and int(box[0]) > 0 and  int(box[1])>0 and int(box[1]+box[3]/2) <480 :
-                print(box)
+            if confidence >= .5 :
                 try:
                     color = Config.colors[int(classid) % len(Config.colors)]
                     cv2.rectangle(frame, box, color, 2)
                     cv2.rectangle(frame, (box[0], box[1] - 20), (box[0] + box[2], box[1]), color, -1)
-                    cv2.putText(frame, Config.class_list[classid] + '  ' + str(math.floor(confidence * 100)) + '%  ' +
+                    cv2.putText(frame, Config.class_list[classid] + ' ' + str(math.floor(confidence * 100)) + '% ' +
                                 str(float(depth_frame[(int(box[0] + box[2]/2), int(box[1]+box[3]/2))]/10)) + 'sm',
-                                (box[0], box[1] - 10), cv2.FONT_HERSHEY_SIMPLEX, .5, (0, 0, 0), thickness=2)
-                    cv2.circle(frame,((int(box[0] + box[2]/2), int(box[1]+box[3]/2))),6,(0,0,255))
+                                (box[0], box[1] - 10), cv2.FONT_HERSHEY_SIMPLEX, .3, (255, 255, 255), thickness=1,)
+                    #cv2.circle(frame,((int(box[0] + box[2]/2), int(box[1]+box[3]/2))),6,(0,0,255))
                 except Exception as ex:
                     print (ex.args)
 

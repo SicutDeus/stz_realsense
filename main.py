@@ -35,7 +35,6 @@ class MainWindow(QtWidgets.QMainWindow):
         self.choose_weights_btn.clicked.connect(
             functools.partial(Net.get_net, self.msg, self.weights_label)
         )
-
         self.update_cameras_btn.clicked.connect(
             functools.partial(Cameras.show_available_cameras_on_window, self.camera_combobox)
         )

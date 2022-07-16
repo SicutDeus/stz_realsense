@@ -42,11 +42,9 @@ class StreamDetectionController:
         :return:
         """
         if Net.net is not None and combobox.count() > 0 and not self.detection.thread_active:
-            print('kek1')
             self.detection.set_params(Net.net, combobox.currentIndex())
             self.detection.start()
         else:
-            print('kek2')
             self.msg.setText('Firstly choose weights and camera(or detection is already running)')
             self.msg.exec_()
 

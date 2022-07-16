@@ -20,6 +20,7 @@ class Utils:
 
     @staticmethod
     def convert_frame_to_yolov5_format(frame):
+        print(frame.shape)
         """
         Преобразует входной кадр в yolov5 формат.
 
@@ -42,5 +43,4 @@ class Utils:
         """
         frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
         qt_img = QImage(frame.data, frame.shape[1], frame.shape[0], QImage.Format_RGB888)
-        result_img = qt_img.scaled(480, 480, Qt.KeepAspectRatio)
-        return result_img
+        return qt_img

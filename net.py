@@ -15,7 +15,7 @@ class Net:
         :param weights_label: лейбл для названия весов
         :return:
         """
-        Net.net_path = 'data\\models\\penis.onnx'
+        Net.net_path = 'data\\models\\xer.onnx'
         Net.net = Utils.build_model(Net.net_path)
         Net.__set_net_name_on_window(weights_label)
 
